@@ -1,0 +1,1 @@
+// typed test credentials (valid, invalid, edge)

@@ -1,0 +1,21 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/.env
+
+# Auth / secrets
+session.json
+
+# Debug artifacts
+debug-session.png
+
+# IDE
+.idea/
+
+# Claude Code
+.claude/

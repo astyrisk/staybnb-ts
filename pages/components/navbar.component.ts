@@ -1,0 +1,35 @@
+import { expect, Locator, Page } from '@playwright/test';
+import {BaseComponent} from "../base.component";
+
+export class NavbarComponent extends BaseComponent {
+    private readonly notificationBell: Locator = this.page.locator('.notification-bell');
+    private readonly userButton: Locator = this.page.locator('.navbar-user-btn');
+    private readonly loginLink: Locator = this.page.locator('a[href*="/login"]');
+    private readonly logoutButton: Locator = this.page.getByRole('button', { name: 'Log out' });
+
+    constructor(page: Page) {
+        super(page);
+    }
+
+    async isLoggedIn(): Promise<boolean> {
+        return this.userButton.isVisible();
+    }
+
+    async expectLoggedInUI() {
+        await expect(this.notificationBell).toBeVisible();
+        await expect(this.userButton).toBeVisible();
+        await expect(this.loginLink).not.toBeVisible();
+    }
+
+    async expectLoggedOut() {
+        await expect(this.loginLink).toBeVisible();
+        await expect(this.userButton).not.toBeVisible();
+    }
+
+    async logout(): Promise<void> {
+        await this.userButton.click()
+        await this.logoutButton.click()
+        await this.loginLink.waitFor({state: 'visible'});
+        // await expect(this.loginLink).toBeVisible();
+    }
+}
