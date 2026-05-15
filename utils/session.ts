@@ -9,7 +9,6 @@ export async function restoreSession(browser: Browser, url = env.BASE_URL, waitF
     const context = await browser.newContext({ storageState: 'environments/session.json' });
     const page = await context.newPage();
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
     if (waitForSelector) {
         await page.waitForSelector(waitForSelector, { timeout: 10000 });
     }

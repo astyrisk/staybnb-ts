@@ -1,6 +1,6 @@
 export const validUser = () => ({
     firstName: 'Test',
     lastName: 'User',
-    email: `test+${Date.now()}@example.com`,
+    email: `test+${crypto.randomUUID()}@example.com`,
     password: 'Password123',
 });

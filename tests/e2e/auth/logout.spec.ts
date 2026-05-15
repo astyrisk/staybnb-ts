@@ -30,6 +30,7 @@ test('user can log back in after logout', screenshotSelector('nav'),
         await new NavbarComponent(page).navigateToLogin();
         const loginPage = new LoginPage(page);
         await loginPage.login(env.HOST_USER_EMAIL, env.HOST_USER_PASSWORD);
-        await page.waitForURL(env.BASE_URL, { waitUntil: 'networkidle' });
+        await page.waitForURL(env.BASE_URL);
+        await page.waitForSelector('.navbar-user-btn');
         await new NavbarComponent(page).expectLoggedInUI();
     });

@@ -24,11 +24,11 @@
   },
   "include": [
     "playwright.config.ts",
+    "globalSetup.ts",
     "tests/**/*",
     "fixtures/**/*",
     "pages/**/*",
-    "utils/**/*",
-    "data/**/*"
+    "utils/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -19,3 +19,5 @@ debug-session.png
 
 # Claude Code
 .claude/
+/CLAUDE.md
+/ARCHITECTURE_REVIEW.md
