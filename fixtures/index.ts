@@ -1,2 +1,2 @@
 export { test } from './auth.fixture';
-export { expect } from '@playwright/test';
+export { expect, screenshotSelector } from './base';
