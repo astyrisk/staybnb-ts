@@ -3,6 +3,7 @@ import {env} from "../../env";
 import {RegisterPage} from "../../../pages/auth/register.page";
 import {NavbarComponent} from "../../../pages/components/navbar.component";
 import {validUser} from "../../data/users";
+import {Selectors} from "../../data/selectors";
 
 test('successful registration redirects to homepage', async ({registeredPage}) => {
     await registeredPage.expectRedirectToHomepage();
@@ -75,7 +76,7 @@ test.describe('form validation', () => {
     });
 });
 
-test('loggedIn user visiting register page redirects to homepage', screenshotSelector('.auth-page'),
+test('loggedIn user visiting register page redirects to homepage', screenshotSelector(Selectors.authPage),
     async ({page, loggedInPage}) => {
         const registerPage = new RegisterPage(page);
         await registerPage.goto();

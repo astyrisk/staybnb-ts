@@ -6,6 +6,7 @@ import { RegisterPage } from '../pages/auth/register.page';
 import { NavbarComponent } from '../pages/components/navbar.component';
 import { env } from '../tests/env';
 import { validUser } from '../tests/data/users';
+import { Selectors } from '../tests/data/selectors';
 
 const SESSION_PATH = 'environments/session.json';
 
@@ -33,7 +34,7 @@ export const test = base.extend<{ loggedInPage: LoginPage; registeredPage: Regis
     loggedInPage: async ({ page }, use) => {
         await injectToken(page);
         await page.goto(env.BASE_URL);
-        await page.waitForSelector('.navbar-user-btn');
+        await page.waitForSelector(Selectors.navbarUserBtn);
         await use(new LoginPage(page));
     },
 
@@ -43,14 +44,14 @@ export const test = base.extend<{ loggedInPage: LoginPage; registeredPage: Regis
         await registerPage.goto();
         await registerPage.register(user.firstName, user.lastName, user.email, user.password, user.password);
         await page.waitForURL(env.BASE_URL);
-        await page.waitForSelector('.navbar-user-btn');
+        await page.waitForSelector(Selectors.navbarUserBtn);
         await use(registerPage);
     },
 
     loggedOutPage: async ({ page }, use) => {
         await injectToken(page);
         await page.goto(env.BASE_URL);
-        await page.waitForSelector('.navbar-user-btn');
+        await page.waitForSelector(Selectors.navbarUserBtn);
         await new NavbarComponent(page).logout();
         await use(page);
     },

@@ -4,6 +4,7 @@ import {LoginPage} from "../../../pages/auth/login.page";
 import {NavbarComponent} from "../../../pages/components/navbar.component";
 import {getStoredToken, restoreSession} from "../../../utils/session";
 import {EXPIRED_TOKEN} from "../../data/tokens";
+import {Selectors} from "../../data/selectors";
 
 test('successfully logging in redirects to homepage', async ({page, loggedInPage}) => {
     await loggedInPage.expectRedirectToHomepage();
@@ -12,7 +13,7 @@ test('successfully logging in redirects to homepage', async ({page, loggedInPage
 test('session persists after browser restart', screenshotSelector('nav'),
     async ({browser, loggedInPage}) => {
         await loggedInPage.saveSession(loggedInPage.context());
-        const newPage = await restoreSession(browser, env.BASE_URL, '.navbar-user-btn');
+        const newPage = await restoreSession(browser, env.BASE_URL, Selectors.navbarUserBtn);
         await new NavbarComponent(newPage).expectLoggedInUI();
     });
 
@@ -46,7 +47,7 @@ test('expired token logs the user out', screenshotSelector('nav'),
         await new NavbarComponent(page).expectLoggedOutUI();
     });
 
-test('loggedIn user visiting login page redirects to homepage', screenshotSelector('.auth-page'),
+test('loggedIn user visiting login page redirects to homepage', screenshotSelector(Selectors.authPage),
     async ({page, loggedInPage}) => {
         await page.goto(LoginPage.PATH);
         await expect(page).toHaveURL(env.BASE_URL);

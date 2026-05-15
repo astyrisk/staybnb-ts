@@ -1,9 +1,10 @@
 import { expect, Locator, Page } from '@playwright/test';
 import {BaseComponent} from "../base.component";
+import {Selectors} from "../../tests/data/selectors";
 
 export class NavbarComponent extends BaseComponent {
     private readonly notificationBell: Locator = this.page.locator('.notification-bell');
-    private readonly userButton: Locator = this.page.locator('.navbar-user-btn');
+    private readonly userButton: Locator = this.page.locator(Selectors.navbarUserBtn);
     private readonly loginLink: Locator = this.page.locator('a[href*="/login"]');
     private readonly logoutButton: Locator = this.page.getByRole('button', { name: 'Log out' });
 

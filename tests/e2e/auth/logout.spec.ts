@@ -3,6 +3,7 @@ import {env} from "../../env";
 import {LoginPage} from "../../../pages/auth/login.page";
 import {NavbarComponent} from "../../../pages/components/navbar.component";
 import {getStoredToken} from "../../../utils/session";
+import {Selectors} from "../../data/selectors";
 
 test('logout shows logged-out UI', screenshotSelector('nav'),
     async ({page, loggedOutPage}) => {
@@ -19,7 +20,7 @@ test('logout redirects to homepage', async ({page, loggedInPage}) => {
     await expect(page).toHaveURL(env.BASE_URL);
 });
 
-test('logged out user can visit login page', screenshotSelector('.auth-page'),
+test('logged out user can visit login page', screenshotSelector(Selectors.authPage),
     async ({page, loggedOutPage}) => {
         await new NavbarComponent(page).navigateToLogin();
         await expect(page).toHaveURL(LoginPage.PATH);
@@ -31,6 +32,6 @@ test('user can log back in after logout', screenshotSelector('nav'),
         const loginPage = new LoginPage(page);
         await loginPage.login(env.HOST_USER_EMAIL, env.HOST_USER_PASSWORD);
         await page.waitForURL(env.BASE_URL);
-        await page.waitForSelector('.navbar-user-btn');
+        await page.waitForSelector(Selectors.navbarUserBtn);
         await new NavbarComponent(page).expectLoggedInUI();
     });
