@@ -9,7 +9,7 @@ node_modules/
 /.env
 
 # Auth / secrets
-session.json
+environments/session.json
 
 # Debug artifacts
 debug-session.png

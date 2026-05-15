@@ -21,15 +21,18 @@ export class NavbarComponent extends BaseComponent {
         await expect(this.loginLink).not.toBeVisible();
     }
 
-    async expectLoggedOut() {
+    async expectLoggedOutUI() {
         await expect(this.loginLink).toBeVisible();
         await expect(this.userButton).not.toBeVisible();
+    }
+
+    async navigateToLogin(): Promise<void> {
+        await this.loginLink.click();
     }
 
     async logout(): Promise<void> {
         await this.userButton.click()
         await this.logoutButton.click()
         await this.loginLink.waitFor({state: 'visible'});
-        // await expect(this.loginLink).toBeVisible();
     }
 }

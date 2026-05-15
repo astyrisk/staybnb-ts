@@ -15,16 +15,11 @@ export class LoginPage extends BasePage {
     }
 
     async goto() {
-        await this.page.goto(LoginPage.PATH); }
-
-    async saveSession(context: BrowserContext) {
-        await this.page.waitForURL(env.BASE_URL, { waitUntil: 'networkidle' });
-        await context.storageState({path: 'session.json'});
-        await context.close();
+        await this.page.goto(LoginPage.PATH);
     }
 
-    async getStoredToken() : Promise<String | null> {
-        return this.page.evaluate(() => localStorage.getItem('staybnb_token'));
+    async saveSession(context: BrowserContext) {
+        await context.storageState({path: 'environments/session.json'});
     }
 
     async login(email: string, password: string) {

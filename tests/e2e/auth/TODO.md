@@ -1,0 +1,3 @@
+- [ ] handle proper navigation
+- [ ] Auth API
+- [ ] Sprint 4, booking
