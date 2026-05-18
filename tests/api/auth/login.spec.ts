@@ -1,6 +1,6 @@
 import { apiTest as test } from '../../../fixtures';
-import { env } from '../../env';
-import { validUser } from '../../data/users';
+import { env } from '../../../support/env';
+import { validUser } from '../../../support/data/users';
 
 test('valid credentials return 200 with a JWT token and user object', async ({ authApi }) => {
     const response = await authApi.login(env.HOST_USER_EMAIL, env.HOST_USER_PASSWORD);

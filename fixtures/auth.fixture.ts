@@ -5,8 +5,7 @@ import { PageManager } from '../pages/page-manager';
 import { env } from '../support/env';
 import { validUser } from '../support/data/users';
 import { Selectors } from '../support/data/selectors';
-
-const SESSION_PATH = 'environments/session.json';
+import { SESSION_PATH } from '../utils/session';
 
 function readStoredToken(): string | null {
     try {
@@ -27,7 +26,9 @@ async function injectToken(page: Page): Promise<void> {
     }, token);
 }
 
-export const test = base.extend<{ pages: PageManager; authenticated: void; registered: void; loggedOut: void }>({
+type User = ReturnType<typeof validUser>;
+
+export const test = base.extend<{ pages: PageManager; authenticated: void; registered: User; loggedOut: void }>({
 
     pages: async ({ page }, use) => {
         await use(new PageManager(page));
@@ -46,7 +47,7 @@ export const test = base.extend<{ pages: PageManager; authenticated: void; regis
         await pages.registerPage.register(user.firstName, user.lastName, user.email, user.password, user.password);
         await page.waitForURL(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);
-        await use();
+        await use(user);
     },
 
     loggedOut: async ({ pages, page }, use) => {

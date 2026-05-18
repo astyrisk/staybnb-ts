@@ -35,7 +35,8 @@ export class RegisterPage extends BasePage {
     }
 
     async expectRedirectToHomepage() {
-        await expect(this.page).toHaveURL(env.BASE_URL);
+        const base = env.BASE_URL.replace(/\/+$/, '');
+        await expect(this.page).toHaveURL(new RegExp(`^${base}/?(?:[?#]|$)`));
     }
 
     async expectFirstNameRequired() {

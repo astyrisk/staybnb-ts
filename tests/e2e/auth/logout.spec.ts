@@ -1,8 +1,8 @@
 import {expect, test, screenshotSelector} from "../../../fixtures";
-import {env} from "../../env";
+import {env} from "../../../support/env";
 import {LoginPage} from "../../../pages/auth/login.page";
 import {getStoredToken} from "../../../utils/session";
-import {Selectors} from "../../data/selectors";
+import {Selectors} from "../../../support/data/selectors";
 
 test('logout shows logged-out UI', screenshotSelector('nav'),
     async ({pages, loggedOut}) => {

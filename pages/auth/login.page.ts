@@ -1,4 +1,4 @@
-import {BrowserContext, expect, Locator, Page} from '@playwright/test';
+import {expect, Locator, Page} from '@playwright/test';
 import {BasePage} from "../base.page";
 import {env} from "../../support/env";
 
@@ -16,10 +16,6 @@ export class LoginPage extends BasePage {
 
     async goto() {
         await this.page.goto(LoginPage.PATH);
-    }
-
-    async saveSession(context: BrowserContext) {
-        await context.storageState({path: 'environments/session.json'});
     }
 
     async login(email: string, password: string) {

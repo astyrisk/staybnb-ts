@@ -7,6 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 import { LoginPage } from './pages/auth/login.page';
 import { env } from './support/env';
 import { Selectors } from './support/data/selectors';
+import { saveSession } from './utils/session';
 
 export default async function globalSetup() {
     const browser = await chromium.launch();
@@ -18,7 +19,7 @@ export default async function globalSetup() {
     await loginPage.login(env.HOST_USER_EMAIL, env.HOST_USER_PASSWORD);
     await page.waitForURL(env.BASE_URL);
     await page.waitForSelector(Selectors.navbarUserBtn);
-    await loginPage.saveSession(context);
+    await saveSession(context);
 
     await browser.close();
 }

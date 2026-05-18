@@ -1,6 +1,6 @@
 import { apiTest as test, expect } from '../../../fixtures';
-import { env } from '../../env';
-import { validUser } from '../../data/users';
+import { env } from '../../../support/env';
+import { validUser } from '../../../support/data/users';
 
 test('valid registration returns 201 with a JWT token and user object', async ({ authApi }) => {
     const user = validUser();

@@ -1,18 +1,18 @@
 import {expect, test, screenshotSelector} from "../../../fixtures";
-import {env} from "../../env";
+import {env} from "../../../support/env";
 import {LoginPage} from "../../../pages/auth/login.page";
 import {NavbarComponent} from "../../../pages/components/navbar.component";
-import {getStoredToken, restoreSession} from "../../../utils/session";
-import {EXPIRED_TOKEN} from "../../data/tokens";
-import {Selectors} from "../../data/selectors";
+import {getStoredToken, restoreSession, saveSession} from "../../../utils/session";
+import {EXPIRED_TOKEN} from "../../../support/data/tokens";
+import {Selectors} from "../../../support/data/selectors";
 
 test('successfully logging in redirects to homepage', async ({pages, authenticated}) => {
     await pages.loginPage.expectRedirectToHomepage();
 });
 
 test('session persists after browser restart', screenshotSelector('nav'),
-    async ({browser, pages, authenticated}) => {
-        await pages.loginPage.saveSession(pages.loginPage.context());
+    async ({page, browser, pages, authenticated}) => {
+        await saveSession(page.context());
         const newPage = await restoreSession(browser, env.BASE_URL, Selectors.navbarUserBtn);
         await new NavbarComponent(newPage).expectLoggedInUI();
     });
