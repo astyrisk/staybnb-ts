@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { LoginPage } from '../pages/auth/login.page';
 import { RegisterPage } from '../pages/auth/register.page';
 import { NavbarComponent } from '../pages/components/navbar.component';
+import { PageManager } from '../pages/page-manager';
 import { env } from '../tests/env';
 import { validUser } from '../tests/data/users';
 import { Selectors } from '../tests/data/selectors';
@@ -29,7 +30,11 @@ async function injectToken(page: Page): Promise<void> {
     }, token);
 }
 
-export const test = base.extend<{ loggedInPage: LoginPage; registeredPage: RegisterPage; loggedOutPage: Page }>({
+export const test = base.extend<{ pages: PageManager; loggedInPage: LoginPage; registeredPage: RegisterPage; loggedOutPage: Page }>({
+
+    pages: async ({ page }, use) => {
+        await use(new PageManager(page));
+    },
 
     loggedInPage: async ({ page }, use) => {
         await injectToken(page);
