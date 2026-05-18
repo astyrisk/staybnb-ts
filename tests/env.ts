@@ -6,6 +6,7 @@ const required = (key: string) => {
 
 export const env = {
     BASE_URL: required('BASE_URL'),
+    API_BASE_URL: required('API_BASE_URL'),
     API_KEY: required('API_KEY'),
     HOST_USER_EMAIL: required('HOST_USER_EMAIL'),
     HOST_USER_PASSWORD: required('HOST_USER_PASSWORD'),

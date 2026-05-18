@@ -6,49 +6,47 @@ import {getStoredToken, restoreSession} from "../../../utils/session";
 import {EXPIRED_TOKEN} from "../../data/tokens";
 import {Selectors} from "../../data/selectors";
 
-test('successfully logging in redirects to homepage', async ({page, loggedInPage}) => {
-    await loggedInPage.expectRedirectToHomepage();
+test('successfully logging in redirects to homepage', async ({pages, authenticated}) => {
+    await pages.loginPage.expectRedirectToHomepage();
 });
 
 test('session persists after browser restart', screenshotSelector('nav'),
-    async ({browser, loggedInPage}) => {
-        await loggedInPage.saveSession(loggedInPage.context());
+    async ({browser, pages, authenticated}) => {
+        await pages.loginPage.saveSession(pages.loginPage.context());
         const newPage = await restoreSession(browser, env.BASE_URL, Selectors.navbarUserBtn);
         await new NavbarComponent(newPage).expectLoggedInUI();
     });
 
 test('invalid password should give error', screenshotSelector('form'),
-    async ({page}) => {
+    async ({page, pages}) => {
         await page.goto(env.BASE_URL);
-        await new NavbarComponent(page).navigateToLogin();
-        const loginPage = new LoginPage(page);
-        await loginPage.login(env.HOST_USER_EMAIL, 'wrong-password');
-        await loginPage.expectInvalidEmailOrPasswordError();
+        await pages.navbar.navigateToLogin();
+        await pages.loginPage.login(env.HOST_USER_EMAIL, 'wrong-password');
+        await pages.loginPage.expectInvalidEmailOrPasswordError();
     });
 
 test('Email and password are required', screenshotSelector('form'),
-    async ({page}) => {
+    async ({page, pages}) => {
         await page.goto(env.BASE_URL);
-        await new NavbarComponent(page).navigateToLogin();
-        const loginPage = new LoginPage(page);
-        await loginPage.login(env.HOST_USER_EMAIL, '');
-        await loginPage.expectEmailAndPasswordAreRequired();
+        await pages.navbar.navigateToLogin();
+        await pages.loginPage.login(env.HOST_USER_EMAIL, '');
+        await pages.loginPage.expectEmailAndPasswordAreRequired();
     });
 
-test('login stores token in localStorage', async ({page, loggedInPage}) => {
+test('login stores token in localStorage', async ({page, authenticated}) => {
     const token = await getStoredToken(page);
     expect(token).not.toBeNull();
 });
 
 test('expired token logs the user out', screenshotSelector('nav'),
-    async ({page, loggedInPage}) => {
+    async ({page, pages, authenticated}) => {
         await page.evaluate((token) => localStorage.setItem('staybnb_token', token), EXPIRED_TOKEN);
         await page.reload();
-        await new NavbarComponent(page).expectLoggedOutUI();
+        await pages.navbar.expectLoggedOutUI();
     });
 
 test('loggedIn user visiting login page redirects to homepage', screenshotSelector(Selectors.authPage),
-    async ({page, loggedInPage}) => {
+    async ({page, authenticated}) => {
         await page.goto(LoginPage.PATH);
         await expect(page).toHaveURL(env.BASE_URL);
     });

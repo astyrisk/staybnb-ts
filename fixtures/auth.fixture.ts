@@ -1,9 +1,6 @@
 import { test as base } from './base';
 import { Page } from '@playwright/test';
 import * as fs from 'fs';
-import { LoginPage } from '../pages/auth/login.page';
-import { RegisterPage } from '../pages/auth/register.page';
-import { NavbarComponent } from '../pages/components/navbar.component';
 import { PageManager } from '../pages/page-manager';
 import { env } from '../tests/env';
 import { validUser } from '../tests/data/users';
@@ -30,34 +27,33 @@ async function injectToken(page: Page): Promise<void> {
     }, token);
 }
 
-export const test = base.extend<{ pages: PageManager; loggedInPage: LoginPage; registeredPage: RegisterPage; loggedOutPage: Page }>({
+export const test = base.extend<{ pages: PageManager; authenticated: void; registered: void; loggedOut: void }>({
 
     pages: async ({ page }, use) => {
         await use(new PageManager(page));
     },
 
-    loggedInPage: async ({ page }, use) => {
+    authenticated: async ({ pages, page }, use) => {
         await injectToken(page);
         await page.goto(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);
-        await use(new LoginPage(page));
+        await use();
     },
 
-    registeredPage: async ({ page }, use) => {
+    registered: async ({ pages, page }, use) => {
         const user = validUser();
-        const registerPage = new RegisterPage(page);
-        await registerPage.goto();
-        await registerPage.register(user.firstName, user.lastName, user.email, user.password, user.password);
+        await pages.registerPage.goto();
+        await pages.registerPage.register(user.firstName, user.lastName, user.email, user.password, user.password);
         await page.waitForURL(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);
-        await use(registerPage);
+        await use();
     },
 
-    loggedOutPage: async ({ page }, use) => {
+    loggedOut: async ({ pages, page }, use) => {
         await injectToken(page);
         await page.goto(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);
-        await new NavbarComponent(page).logout();
-        await use(page);
+        await pages.navbar.logout();
+        await use();
     },
 });
