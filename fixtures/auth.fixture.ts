@@ -2,9 +2,9 @@ import { test as base } from './base';
 import { Page } from '@playwright/test';
 import * as fs from 'fs';
 import { PageManager } from '../pages/page-manager';
-import { env } from '../tests/env';
-import { validUser } from '../tests/data/users';
-import { Selectors } from '../tests/data/selectors';
+import { env } from '../support/env';
+import { validUser } from '../support/data/users';
+import { Selectors } from '../support/data/selectors';
 
 const SESSION_PATH = 'environments/session.json';
 

@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import {BaseComponent} from "../base.component";
-import {Selectors} from "../../tests/data/selectors";
+import {Selectors} from "../../support/data/selectors";
 
 export class NavbarComponent extends BaseComponent {
     private readonly notificationBell: Locator = this.page.locator('.notification-bell');

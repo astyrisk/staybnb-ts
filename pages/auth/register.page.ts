@@ -1,6 +1,6 @@
 import {expect, Locator, Page} from '@playwright/test';
 import {BasePage} from "../base.page";
-import {env} from "../../tests/env";
+import {env} from "../../support/env";
 
 export class RegisterPage extends BasePage {
     static readonly PATH = env.BASE_URL + '/register';

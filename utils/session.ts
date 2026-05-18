@@ -1,5 +1,5 @@
 import { Browser, Page } from '@playwright/test';
-import { env } from "../tests/env";
+import { env } from "../support/env";
 
 export async function getStoredToken(page: Page): Promise<string | null> {
     return page.evaluate(() => localStorage.getItem('staybnb_token'));

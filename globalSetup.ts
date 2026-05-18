@@ -5,8 +5,8 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 import { LoginPage } from './pages/auth/login.page';
-import { env } from './tests/env';
-import { Selectors } from './tests/data/selectors';
+import { env } from './support/env';
+import { Selectors } from './support/data/selectors';
 
 export default async function globalSetup() {
     const browser = await chromium.launch();

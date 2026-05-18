@@ -1,5 +1,5 @@
 import { APIRequestContext, APIResponse, expect } from '@playwright/test';
-import { env } from '../../tests/env';
+import { env } from '../../support/env';
 
 const AUTH_BASE = `${env.API_BASE_URL}/auth`;
 

@@ -12,7 +12,7 @@ export class BasePage {
     }
 
     async getTitle() {
-        return this.page.title;
+        return this.page.title();
     }
 
     async getCurrentUrl() {
