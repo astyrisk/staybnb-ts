@@ -10,4 +10,6 @@ export const env = {
     API_KEY: required('API_KEY'),
     HOST_USER_EMAIL: required('HOST_USER_EMAIL'),
     HOST_USER_PASSWORD: required('HOST_USER_PASSWORD'),
+    GUEST_USER_EMAIL: required('GUEST_USER_EMAIL'),
+    GUEST_USER_PASSWORD: required('GUEST_USER_PASSWORD'),
 }

@@ -1,6 +1,7 @@
 import {expect, Locator, Page} from '@playwright/test';
 import {BasePage} from "../base.page";
 import {env} from "../../support/env";
+import {Selectors} from "../../support/data/selectors";
 
 export class LoginPage extends BasePage {
     static readonly PATH = env.BASE_URL + '/login';
@@ -22,6 +23,18 @@ export class LoginPage extends BasePage {
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
         await this.submitButton.click();
+    }
+
+    async loginAsGuest() {
+        await this.goto();
+        await this.login(env.GUEST_USER_EMAIL, env.GUEST_USER_PASSWORD);
+        await this.page.waitForSelector(Selectors.navbarUserBtn);
+    }
+
+    async loginAsHost() {
+        await this.goto();
+        await this.login(env.HOST_USER_EMAIL, env.HOST_USER_PASSWORD);
+        await this.page.waitForSelector(Selectors.navbarUserBtn);
     }
 
     async expectInvalidEmailOrPasswordError() {

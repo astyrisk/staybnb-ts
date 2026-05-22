@@ -16,6 +16,10 @@ export class NavbarComponent extends BaseComponent {
         return this.userButton.isVisible();
     }
 
+    async waitForLoggedIn() {
+        await this.page.waitForSelector(Selectors.navbarUserBtn);
+    }
+
     async expectLoggedInUI() {
         await expect(this.notificationBell).toBeVisible();
         await expect(this.userButton).toBeVisible();
