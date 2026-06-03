@@ -2,6 +2,7 @@ import {BasePage} from "../base.page";
 import {expect, Locator, Page} from "@playwright/test";
 import {env} from "../../support/env";
 import {LoginPage} from "../auth/login.page";
+import {Booking} from "../../support/data/bookings";
 
 export class PropertyDetailsPage extends BasePage {
     static PATH = env.BASE_URL + "/properties/";
@@ -34,9 +35,13 @@ export class PropertyDetailsPage extends BasePage {
         await this.page.locator('.date-picker-day:enabled').nth(index).click();
     }
 
-    // TODO this should return a booking (a type with name, location, date, no. guests
-    async clickOnReserveButton() {
+    async clickOnReserveButton(): Promise<Booking> {
+        const responsePromise = this.page.waitForResponse(
+            r => r.url().includes('/bookings') && r.request().method() === 'POST'
+        );
         await this.reserveButton.click();
+        const data = await (await responsePromise).json();
+        return { bookingID: String(data.id) };
     }
 
     async selectStayDates(checkInIndex: number, checkOutIndex: number) {

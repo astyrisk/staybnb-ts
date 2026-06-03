@@ -1,6 +1,7 @@
 import { expect, test, screenshotSelector } from "../../../fixtures";
 import {seededProperty} from 'support/data/properties'
 import { guestAuthFile } from '../../../support/auth-files';
+import {Booking} from 'support/data/bookings';
 
 test.describe("storageState/loggedIn/widget UI", () => {
   test.beforeEach(async ({pages}, testInfo) => {
@@ -37,27 +38,32 @@ test.describe("unauthenticated/no storageState", () => {
 test.describe("storageState/loggedIn as guest/widget", () => {
   test.use({ storageState: guestAuthFile });
 
+  let booking: Booking | undefined;
+
   test.beforeEach(async ({pages}, testInfo) => {
     testInfo.annotations.push({type: 'screenshot-selector', description: '.booking-widget'});
+    booking = undefined;
     await pages.propertyDetailsPage.goto(seededProperty.id);
   });
 
-  test("Reserving a valid property gets it into guest's booking tab", async ({pages}) => {
+  test("Reserving a valid property gets it into the user's booking tab", async ({pages}) => {
     await pages.propertyDetailsPage.selectStayDates(0, 4);
-    // TODO a booking object should has proper Booking type
-    /* const booking = await pages.propertyDetailsPage.clickOnReserveButton(); */
-    await pages.propertyDetailsPage.clickOnReserveButton();
-    await pages.myBookingPage.expectBookingInUpcomingBookings()
-
-    // await pages.propertyDetailsPage.expectReserveInBookingTab();
+    booking = await pages.propertyDetailsPage.clickOnReserveButton();
+    await pages.myBookingPage.goto();
+    await pages.myBookingPage.expectBookingInUpcomingBookings(booking);
   });
 
-  test("Reserving a valid property sends a notification to the host", async ({pages}) => {
+  test("Reserving a valid property sends a notification to the host", async ({pages, hostPages}) => {
     await pages.propertyDetailsPage.selectStayDates(0, 4);
-    await pages.propertyDetailsPage.clickOnReserveButton();
-    // TODO login with the new context page of the host, then run the expect -PS: maybe we should use different contexts of host and guest
-    // await pages.propertyDetailsPage.expectReserveInNotifcation();
-    // tear-up the reserve & the login
+    booking = await pages.propertyDetailsPage.clickOnReserveButton();
+    await hostPages.notificationsPage.goto();
+    await hostPages.notificationsPage.expectBookingNotification(booking);
+  });
+
+  test.afterEach(async ({pages}) => {
+    if (booking?.bookingID) {
+      await pages.myBookingPage.cancelBooking(booking);
+    }
   });
 });
 

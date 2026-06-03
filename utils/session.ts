@@ -17,6 +17,6 @@ export async function restoreSession(browser: Browser, url = env.BASE_URL): Prom
     const context = await browser.newContext({ storageState: SESSION_PATH });
     const page = await context.newPage();
     await page.goto(url);
-    await page.waitForSelector(Selectors.navbarUserBtn, {timeout: 10000});
+    await page.waitForSelector(Selectors.navbarUserBtn);
     return page;
 }

@@ -4,6 +4,7 @@ import { RegisterPage } from './auth/register.page';
 import { NavbarComponent } from './components/navbar.component';
 import {PropertyDetailsPage} from "./property/property-details.page";
 import {BookingPage} from "./booking/mybooking.page";
+import {NotificationsPage} from "./notifications/notifications.page";
 
 export class PageManager {
     readonly loginPage: LoginPage;
@@ -11,6 +12,7 @@ export class PageManager {
     readonly navbar: NavbarComponent;
     readonly propertyDetailsPage: PropertyDetailsPage;
     readonly myBookingPage: BookingPage;
+    readonly notificationsPage: NotificationsPage;
 
     constructor(page: Page) {
         this.loginPage = new LoginPage(page);
@@ -18,5 +20,6 @@ export class PageManager {
         this.navbar = new NavbarComponent(page);
         this.propertyDetailsPage = new PropertyDetailsPage(page);
         this.myBookingPage = new BookingPage(page);
+        this.notificationsPage = new NotificationsPage(page);
     }
 }

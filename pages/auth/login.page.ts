@@ -8,8 +8,8 @@ export class LoginPage extends BasePage {
 
     readonly emailInput: Locator = this.page.getByLabel('Email');
     readonly passwordInput: Locator = this.page.getByLabel('Password');
-    readonly submitButton: Locator  = this.page.getByRole('button', {name: 'Log in'});
-    readonly authErrorMessage : Locator = this.page.locator('.auth-error');
+    readonly submitButton: Locator = this.page.getByRole('button', {name: 'Log in'});
+    readonly authErrorMessage: Locator = this.page.locator('.auth-error');
 
     constructor(page: Page) {
         super(page);
@@ -43,11 +43,6 @@ export class LoginPage extends BasePage {
 
     async expectEmailAndPasswordAreRequired() {
         await expect(this.authErrorMessage).toContainText('Email and password are required');
-    }
-
-    async expectRateLimitError() {
-        // TODO: replace with the actual rate limit message from the app
-        await expect(this.authErrorMessage).toContainText('Too many attempts');
     }
 
     async expectRedirectToHomepage() {
