@@ -94,3 +94,11 @@ GET -> https://qa-playground.nixdev.co/api/t/automation-abdelbary/bookings?statu
 ---------------------------------------------
 There is also declined endpoint. But, iam not sure what/when to use it yet.
 https://qa-playground.nixdev.co/api/t/automation-abdelbary/bookings?status=DECLINED
+
+
+
+
+-------------------------------------------------------------------------------------------------
+HOST CONFIRM A BOOKING
+PUT -> https://qa-playground.nixdev.co/api/t/automation-abdelbary/hosting/bookings/635/confirm
+{"message":"Booking confirmed successfully","status":"CONFIRMED"}

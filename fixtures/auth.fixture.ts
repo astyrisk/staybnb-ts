@@ -33,7 +33,7 @@ export const test = base.extend<AuthFixtures>({
         await context.close();
     },
 
-    // TODO is it for host or guest?
+    // TODO is it for host or guest? ()
     authenticated: async ({ page }, use) => {
         await page.goto(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);

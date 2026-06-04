@@ -1,5 +1,5 @@
 import {BasePage} from "../base.page";
-import {expect, Page} from "@playwright/test";
+import {expect, Locator, Page} from "@playwright/test";
 import {env} from "../../support/env";
 import {Booking} from "../../support/data/bookings";
 import {getStoredToken} from "../../utils/session";
@@ -7,6 +7,12 @@ import {getStoredToken} from "../../utils/session";
 
 export class BookingPage extends BasePage {
     static readonly PATH = env.BASE_URL + "/bookings";
+
+    readonly bookingCards: Locator = this.page.locator('.booking-card');
+    readonly cancelledTab: Locator = this.page.getByRole('button', { name: 'Cancelled' });
+    readonly cancelledStatusBadge: Locator = this.page.locator('.booking-card__status--cancelled').first();
+    readonly confirmedStatusBadge: Locator = this.page.locator('.booking-card__status--confirmed');
+    readonly declinedStatusBadge: Locator = this.page.locator('.booking-detail__status--declined');
 
     constructor(page: Page) {
         super(page);
@@ -16,30 +22,23 @@ export class BookingPage extends BasePage {
         await this.page.goto(BookingPage.PATH);
     }
 
-    async getUpcomingBookingsViaUI(): Promise<Booking[]> {
-        const cards = this.page.locator('.booking-card');
-        const count = await cards.count();
+    private async getBookingCardsFromUI(): Promise<Booking[]> {
+        const count = await this.bookingCards.count();
         const bookings: Booking[] = [];
-
         for (let i = 0; i < count; i++) {
-            const href = await cards.nth(i).getAttribute('href') ?? '';
+            const href = await this.bookingCards.nth(i).getAttribute('href') ?? '';
             bookings.push({ bookingID: href.split('/').pop() ?? '' });
         }
         return bookings;
     }
-    async getUpcomingBookingsViaAPI(): Promise<Booking[]> {
-        const token = await getStoredToken(this.page);
-        const response = await this.page.request.get(`${env.API_BASE_URL}/bookings`, {
-            params: { status: 'PENDING' },
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const { bookings } = await response.json();
-        return bookings.map((b: { id: number }) => ({ bookingID: String(b.id) }));
+
+    async getUpcomingBookings(): Promise<Booking[]> {
+        return this.getBookingCardsFromUI();
     }
 
     async expectBookingInUpcomingBookings(booking: Booking) {
-        await this.page.locator('.booking-card').first().waitFor({ state: 'visible' });
-        const bookings = await this.getUpcomingBookingsViaUI();
+        await this.bookingCards.first().waitFor({ state: 'visible' });
+        const bookings = await this.getUpcomingBookings();
         expect(bookings.some(b => b.bookingID === booking.bookingID)).toBe(true);
     }
 
@@ -50,16 +49,25 @@ export class BookingPage extends BasePage {
         });
     }
 
-    async cancelBookingInUpcomingBookings(booking: Booking) {
+    async getCancelledBookings(): Promise<Booking[]> {
+        await this.goto();
+        await this.cancelledTab.click();
+        await this.cancelledStatusBadge.waitFor({ state: 'visible' });
+        return this.getBookingCardsFromUI();
     }
 
-    inUpcomingBookings() {
+    async expectBookingInCancelledBookings(booking: Booking) {
+        const bookings = await this.getCancelledBookings();
+        expect(bookings.some(b => b.bookingID === booking.bookingID)).toBe(true);
     }
 
-    getCancelledBookings() {
+    async expectBookingConfirmedInUpcoming(booking: Booking) {
+        const card = this.page.locator(`a.booking-card[href*="${booking.bookingID}"]`);
+        await expect(card.locator(this.confirmedStatusBadge)).toBeVisible();
     }
 
-    getCancelledBooking() {
+    async expectBookingDeclined(booking: Booking) {
+        await this.page.goto(`${BookingPage.PATH}/${booking.bookingID}`);
+        await expect(this.declinedStatusBadge).toBeVisible();
     }
 }
-
