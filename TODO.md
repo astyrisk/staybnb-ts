@@ -2,4 +2,9 @@
 - [x] implement a proper authentication flow: for guest and host accounts
 - [x] E2E booking, notification tests
 - [ ] review E2E testings
+  - [x] booking-requests
+  - [x] mybookings
+  - [x] widget
+  - [x] notifications
+- [ ] fix the concurrent issues in the code
 - [ ] booking, notification API Tests

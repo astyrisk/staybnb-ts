@@ -27,19 +27,21 @@ export const test = base.extend<AuthFixtures>({
         await context.close();
     },
 
+    // NOTE can be used if the default current authentication is for host and we do need different context for guests
     guestPages: async ({ browser }, use) => {
         const context = await browser.newContext({ storageState: guestAuthFile });
         await use(new PageManager(await context.newPage()));
         await context.close();
     },
 
-    // TODO is it for host or guest? ()
+    // NOTE wait for authentication fixture
     authenticated: async ({ page }, use) => {
         await page.goto(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);
         await use();
     },
 
+    // NOTE creates a new account
     registered: async ({ pages, page }, use) => {
         const user = validUser();
         await pages.registerPage.goto();
@@ -49,6 +51,7 @@ export const test = base.extend<AuthFixtures>({
         await use(user);
     },
 
+    // NOTE returns context's page after logging out
     loggedOut: async ({ pages, page }, use) => {
         await page.goto(env.BASE_URL);
         await page.waitForSelector(Selectors.navbarUserBtn);

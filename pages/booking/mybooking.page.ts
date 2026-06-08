@@ -4,7 +4,6 @@ import {env} from "../../support/env";
 import {Booking} from "../../support/data/bookings";
 import {getStoredToken} from "../../utils/session";
 
-
 export class BookingPage extends BasePage {
     static readonly PATH = env.BASE_URL + "/bookings";
 
@@ -24,6 +23,7 @@ export class BookingPage extends BasePage {
 
     private async getBookingCardsFromUI(): Promise<Booking[]> {
         const count = await this.bookingCards.count();
+
         const bookings: Booking[] = [];
         for (let i = 0; i < count; i++) {
             const href = await this.bookingCards.nth(i).getAttribute('href') ?? '';
@@ -36,10 +36,29 @@ export class BookingPage extends BasePage {
         return this.getBookingCardsFromUI();
     }
 
+    async getCancelledBookings(): Promise<Booking[]> {
+        await this.goto();
+        await this.cancelledTab.click();
+        await this.cancelledStatusBadge.waitFor({ state: 'visible' });
+        return this.getBookingCardsFromUI();
+    }
+
     async expectBookingInUpcomingBookings(booking: Booking) {
-        await this.bookingCards.first().waitFor({ state: 'visible' });
-        const bookings = await this.getUpcomingBookings();
-        expect(bookings.some(b => b.bookingID === booking.bookingID)).toBe(true);
+        await this.goto();
+        await expect(this.page.locator(`a.booking-card[href*="${booking.bookingID}"]`)).toBeVisible();
+    }
+
+    async expectBookingConfirmedInUpcoming(booking: Booking) {
+        await this.goto();
+        const card = this.page.locator(`a.booking-card[href*="${booking.bookingID}"]`);
+        await expect(card.locator(this.confirmedStatusBadge)).toBeVisible();
+    }
+
+    async expectBookingInCancelledBookings(booking: Booking) {
+        await this.goto();
+        await this.cancelledTab.click();
+        const card = this.page.locator(`a.booking-card[href*="${booking.bookingID}"]`);
+        await expect(card.locator('.booking-card__status--cancelled')).toBeVisible();
     }
 
     async cancelBooking(booking: Booking) {
@@ -49,23 +68,7 @@ export class BookingPage extends BasePage {
         });
     }
 
-    async getCancelledBookings(): Promise<Booking[]> {
-        await this.goto();
-        await this.cancelledTab.click();
-        await this.cancelledStatusBadge.waitFor({ state: 'visible' });
-        return this.getBookingCardsFromUI();
-    }
-
-    async expectBookingInCancelledBookings(booking: Booking) {
-        const bookings = await this.getCancelledBookings();
-        expect(bookings.some(b => b.bookingID === booking.bookingID)).toBe(true);
-    }
-
-    async expectBookingConfirmedInUpcoming(booking: Booking) {
-        const card = this.page.locator(`a.booking-card[href*="${booking.bookingID}"]`);
-        await expect(card.locator(this.confirmedStatusBadge)).toBeVisible();
-    }
-
+    // NOTE expect would check against ID if it could find it, otherwise it would check against the title as in booking-requests
     async expectBookingDeclined(booking: Booking) {
         await this.page.goto(`${BookingPage.PATH}/${booking.bookingID}`);
         await expect(this.declinedStatusBadge).toBeVisible();

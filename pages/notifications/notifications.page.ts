@@ -3,6 +3,7 @@ import {expect, Locator, Page} from "@playwright/test";
 import {env} from "../../support/env";
 import {Booking} from "../../support/data/bookings";
 
+// TODO review the current page
 export class NotificationsPage extends BasePage {
     static readonly PATH = env.BASE_URL + "/notifications";
 
@@ -22,6 +23,7 @@ export class NotificationsPage extends BasePage {
     }
 
     async expectBookingNotification(booking: Booking) {
+        await this.goto();
         await this.notificationCards.first().waitFor({ state: 'visible' });
         await expect(
             this.notificationTitleFor(booking).filter({ hasText: 'New booking request' }).first()
@@ -29,6 +31,7 @@ export class NotificationsPage extends BasePage {
     }
 
     async expectCancellationNotification(booking: Booking) {
+        await this.goto();
         await this.notificationCards.first().waitFor({ state: 'visible' });
         await expect(
             this.notificationTitleFor(booking).filter({ hasText: 'Booking cancelled' }).first()
@@ -36,6 +39,7 @@ export class NotificationsPage extends BasePage {
     }
 
     async expectConfirmationNotification(booking: Booking) {
+        await this.goto();
         await this.notificationCards.first().waitFor({ state: 'visible' });
         await expect(
             this.notificationTitleFor(booking).filter({ hasText: 'Booking confirmed' }).first()
@@ -43,6 +47,7 @@ export class NotificationsPage extends BasePage {
     }
 
     async expectDeclineNotification(booking: Booking) {
+        await this.goto();
         await this.notificationCards.first().waitFor({ state: 'visible' });
         await expect(
             this.notificationTitleFor(booking).filter({ hasText: 'Booking declined' }).first()

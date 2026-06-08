@@ -28,8 +28,9 @@ test.describe("unauthenticated/no storageState", () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test("Clicking reserve without authentication redirects to login", async ({pages}) => {
+    await pages.propertyDetailsPage.goto(seededProperty.id);
     await pages.propertyDetailsPage.selectStayDates(0, 4);
-    await pages.propertyDetailsPage.clickOnReserveButton();
+    await pages.propertyDetailsPage.clickReserve();
     await pages.propertyDetailsPage.expectRedirectToLoginPage();
   });
 });

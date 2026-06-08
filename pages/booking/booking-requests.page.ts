@@ -24,41 +24,42 @@ export class BookingRequestsPage extends BasePage {
         await this.page.goto(BookingRequestsPage.PATH);
     }
 
-    private cardByProperty(propertyTitle: string) {
+    private getCard(propertyTitle: string) {
         return this.bookingCards.filter({
             has: this.bookingCardDetailValue.filter({ hasText: propertyTitle }),
         }).first();
     }
 
-    async confirmBookingByProperty(propertyTitle: string) {
-        const card = this.cardByProperty(propertyTitle);
-        await card.locator(this.confirmBtn).click();
+    private async actOnBooking(propertyTitle: string, cardBtn: Locator, modalBtn: Locator) {
+        await this.goto();
+        const card = this.getCard(propertyTitle);
+        await card.locator(cardBtn).click();
         await this.modal.waitFor({ state: 'visible' });
-        await this.modalConfirmBtn.click();
+        await modalBtn.click();
         await this.modal.waitFor({ state: 'hidden' });
     }
 
-    async declineBookingByProperty(propertyTitle: string) {
-        const card = this.cardByProperty(propertyTitle);
-        await card.locator(this.declineBtn).click();
-        await this.modal.waitFor({ state: 'visible' });
-        await this.modalDeclineBtn.click();
-        await this.modal.waitFor({ state: 'hidden' });
+    async confirmBooking(propertyTitle: string) {
+        await this.actOnBooking(propertyTitle, this.confirmBtn, this.modalConfirmBtn);
+    }
+
+    async declineBooking(propertyTitle: string) {
+        await this.actOnBooking(propertyTitle, this.declineBtn, this.modalDeclineBtn);
     }
 
     async expectPendingBookingVisible(propertyTitle: string) {
-        const card = this.cardByProperty(propertyTitle);
+        const card = this.getCard(propertyTitle);
         await expect(card.locator(this.pendingStatusBadge)).toBeVisible();
     }
 
     async expectBookingInConfirmedTab(propertyTitle: string) {
         await this.confirmedTab.click();
-        const card = this.cardByProperty(propertyTitle);
+        const card = this.getCard(propertyTitle);
         await expect(card.locator(this.confirmedStatusBadge)).toBeVisible();
     }
 
     async expectNoPendingBookingForProperty(propertyTitle: string) {
-        const card = this.cardByProperty(propertyTitle);
+        const card = this.getCard(propertyTitle);
         await expect(card).not.toBeVisible();
     }
 }
