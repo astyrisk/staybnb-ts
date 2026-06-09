@@ -6,13 +6,13 @@ import fs from 'fs';
 const isCI = !!process.env.CI;
 
 setup('authenticate as host', async ({ page }) => {
-    if (!isCI && fs.existsSync(hostAuthFile)) return;  
+    // if (!isCI && fs.existsSync(hostAuthFile)) return;
     await new LoginPage(page).loginAsHost();
     await page.context().storageState({ path: hostAuthFile });
 });
 
 setup('authenticate as guest', async ({ page }) => {
-    if (!isCI && fs.existsSync(guestAuthFile)) return;
+    // if (!isCI && fs.existsSync(guestAuthFile)) return;
     await new LoginPage(page).loginAsGuest();
     await page.context().storageState({ path: guestAuthFile });
 });

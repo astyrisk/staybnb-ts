@@ -4,6 +4,7 @@ import { env } from '../support/env';
 import { validUser } from '../support/data/users';
 import { Selectors } from '../support/data/selectors';
 import { hostAuthFile, guestAuthFile } from '../support/auth-files';
+import { Booking } from '../support/data/bookings';
 
 type User = ReturnType<typeof validUser>;
 
@@ -14,6 +15,7 @@ type AuthFixtures = {
     authenticated: void;
     registered: User;
     loggedOut: void;
+    bookedProperty: Booking;
 };
 
 export const test = base.extend<AuthFixtures>({
@@ -57,5 +59,11 @@ export const test = base.extend<AuthFixtures>({
         await page.waitForSelector(Selectors.navbarUserBtn);
         await pages.navbar.logout();
         await use();
+    },
+
+    bookedProperty: async ({ pages }, use) => {
+        const booking = await pages.propertyDetailsPage.bookSeededProperty();
+        await use(booking);
+        await pages.myBookingPage.cancelBooking(booking);
     },
 });
