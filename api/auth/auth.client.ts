@@ -44,11 +44,12 @@ export class AuthApiClient {
         expect(body.user).toBeDefined();
     }
 
-    async expectRegisterSuccess(response: APIResponse): Promise<void> {
+    async expectRegisterSuccess(response: APIResponse): Promise<AuthSuccessBody> {
         expect(response.status()).toBe(201);
         const body = await response.json() as AuthSuccessBody;
         expect(body.token).toBeTruthy();
         expect(body.user).toBeDefined();
+        return body;
     }
 
     async expectValidationError(response: APIResponse): Promise<void> {
